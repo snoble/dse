@@ -1,0 +1,6 @@
+files
+dse.js: the javascript library for handling key and message encryption and decryption
+  Depends on aes.js, rsa.js, rsa2.js, jsbn.js and jsbn2.js
+KeyGenerator.as: an ActionScript3 script for generating keys for dse.js to manage
+  Depends on AS3Crypto
+
