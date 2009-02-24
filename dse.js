@@ -128,6 +128,9 @@ function hexToByteString(hex){
 
 
 //depends on passphrase, publicKey, erk, ed, efk being set by setKeys
+//in theory this will encrypt a message of any length but if you exceed 
+//20 block lengths (320 characters with a 1024 bit key) information
+//about the message length is exposed in the length of the cipher text
 function DSEencryptPlainText(plaintext){
   if(!this.encryptprepared){
     this.rsakey.setPublic(this.publickey, "10001");
@@ -139,7 +142,7 @@ function DSEencryptPlainText(plaintext){
     var block = plaintext.substr(i, n);
     ciphertext += this.rsakey.encrypt(block);
   }
-  for(i; i< n*10; i += n){
+  for(i; i< n*20; i += n){
     ciphertext += this.rsakey.encrypt("");
   }
   return ciphertext;
