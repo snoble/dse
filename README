@@ -1,6 +1,13 @@
+This is a library to make it easier for web service providers to offer encrypted
+correspondences between their clients.  see www.dropsecret.com for an example
+of such a service.
+
 files
 dse.js: the javascript library for handling key and message encryption and decryption
-  Depends on aes.js, rsa.js, rsa2.js, jsbn.js and jsbn2.js
+  Depends on aes.js from http://www.fourmilab.ch/javascrypt/
+    rsa.js, rsa2.js, jsbn.js, jsbn2.js, rng.js and prng4.js 
+      from http://www-cs-students.stanford.edu/~tjw/jsbn/
+    and sha256.js from http://anmar.eu.org/
 KeyGenerator.as: an ActionScript3 script for generating keys for dse.js to manage
   Depends on AS3Crypto
 
