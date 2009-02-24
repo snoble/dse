@@ -3,24 +3,24 @@ function DSEKey(){
   this.decryptprepared = false;
   this.encryptprepared = false;
   this.rsakey = new RSAKey();
-  this.publickey = null;
-  this.rk = null;
-  this.fk = null;
-  this.ed = null;
-  this.erk = null;
-  this.efk = null;
-  this.d = null;
-  this.p = null;
-  this.q = null;
-  this.dmp = null;
-  this.dmq = null;
-  this.qinv = null;
-  this.passphrase = ""; 
+  this.publickey = null; //Hex of RSA publickey
+  this.rk = null; //Hex of random AES key
+  this.fk = null; //string of json containing 
+  this.ed = null; //Hex of private RSA exponent encrypted with passphrase AES key
+  this.erk = null; //Hex of random AES key encrypted with RSA key
+  this.efk = null; //Hex of fk encrypted with random AES key
+  this.d = null; //Hex of private RSA exponent
+  this.p = null; //Hex of private RSA prime p
+  this.q = null; //Hex of private RSA prime q
+  this.dmp = null; //Hex of d mod p
+  this.dmq = null; //Hex of d mod q
+  this.qinv = null; //Hex of inverse of q in the finite field of order p
+  this.passphrase = ""; //Passphrase for generating AES key
 }
 
 var prng;
 
-//depends on rk, d, p, q, dmp, dmq, qinv
+//depends on rk, d, p, q, dmp, dmq, qinv being set by setKeys
 function DSEencryptKeys(){
   var aeskey = hexToByteArray(hex_sha256(this.passphrase));
   var mode = "CBC";
@@ -48,6 +48,8 @@ function DSEencryptKeys(){
   return this;
 }
 
+//Returns the versions of the keys that can be safely seen by a 3rd party.
+//This object can be passed to setKeys to do things like encrypting and decrypting messages
 function DSEgetSafeKeys(){
   return {publickey: this.publickey, ed:this.ed, erk:this.erk, efk:this.efk};
 }
@@ -59,6 +61,7 @@ function DSEsetKeys(keys){
   return this;
 }
 
+//depends on passphrase, publicKey, erk, ed, efk being set by setKeys
 function DSEdecryptKeys(){
   var aeskey = hexToByteArray(hex_sha256(this.passphrase));
   var mode = "CBC";
@@ -124,6 +127,7 @@ function hexToByteString(hex){
 }
 
 
+//depends on passphrase, publicKey, erk, ed, efk being set by setKeys
 function DSEencryptPlainText(plaintext){
   if(!this.encryptprepared){
     this.rsakey.setPublic(this.publickey, "10001");
@@ -141,6 +145,7 @@ function DSEencryptPlainText(plaintext){
   return ciphertext;
 }
 
+//depends on passphrase, publicKey, erk, ed, efk being set by setKeys
 function DSEdecryptCipherText(ciphertext){
   if(!this.decryptprepared){
     this.decryptprepared = this.decryptKeys();
