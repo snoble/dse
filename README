@@ -9,5 +9,7 @@ dse.js: the javascript library for handling key and message encryption and decry
       from http://www-cs-students.stanford.edu/~tjw/jsbn/
     and sha256.js from http://anmar.eu.org/
 KeyGenerator.as: an ActionScript3 script for generating keys for dse.js to manage
-  Depends on AS3Crypto
+  Depends on AS3Crypto from http://code.google.com/p/as3crypto/
+  KeyGenerator depends on there existing a javascript function setvalue to deliver
+    info to
 
