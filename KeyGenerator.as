@@ -1,4 +1,4 @@
-package mns.crypto{
+package dse{
 	import com.hurlant.crypto.prng.Random;
 	import com.hurlant.crypto.rsa.RSAKey;
 	import com.hurlant.util.Hex;
