@@ -1,13 +1,16 @@
 package dse{
+	import com.hurlant.crypto.Crypto;
+	import com.hurlant.crypto.hash.IHash;
 	import com.hurlant.crypto.prng.Random;
 	import com.hurlant.crypto.rsa.RSAKey;
 	import com.hurlant.util.Hex;
 	
 	import flash.external.ExternalInterface;
 	import flash.utils.ByteArray;
+	
 	public class KeyGenerator
 	{
-		public static function generateKeys():void{
+		public static function generateKeys(passphrase:String):void{
 			var exp:String = "10001";
 			var rsa:RSAKey = RSAKey.generate(1024, exp);
 			ExternalInterface.call("setvalue", "publickey", rsa.n.toString());
@@ -20,7 +23,16 @@ package dse{
 				
 			var r:Random = new Random;
 			var rankey:ByteArray = new ByteArray; var discard:ByteArray = new ByteArray;
-			r.nextBytes(discard, 32);
+
+			//incorporate passphrase into seeding process
+			var hash:IHash = Crypto.getHash("sha256");
+			var p:ByteArray = hash.hash(Hex.toArray(Hex.fromString(passphrase)));
+			r.autoSeed();
+			while (p.bytesAvailable>=4) {
+				r.seed(p.readUnsignedInt());
+			}
+
+			r.nextBytes(discard, 1024);
 			r.nextBytes(rankey, 32);
 			ExternalInterface.call("setvalue", "rk", Hex.fromArray(rankey));
 		}
