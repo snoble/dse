@@ -68,9 +68,6 @@ function DSEdecryptKeys(){
   var ciphertext = hexToByteArray(this.ed);
   var d = rijndaelDecrypt(ciphertext, aeskey, mode);
   this.d = byteArrayToHex(d);
-  while(this.d.substr(this.d.length-2) == '00'){
-    this.d = this.d.substr(0, this.d.length -2);
-  }
   this.rsakey = new RSAKey();
   this.rsakey.setPrivate(this.publickey, "10001", this.d);
   var randomaeskeybs = this.rsakey.decrypt(this.erk);
